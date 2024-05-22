@@ -1,0 +1,7 @@
+this is a project template for a sdl3 project.
+to build this project:
+1) mkdir build && cd build
+2) cmake .. --presets=default
+3) make
+
+Note: This has only been tested on a linux machine using clang. It probably will not work on windows, and i have no idea if it will work with gcc (although i dont really see why it shouldn't?)

@@ -1,0 +1,15 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired":{
+    "major": 3,
+    "minor": 20,
+    "patch": 0
+  },
+  "configurePresets": [{
+    "name": "default",
+    "cacheVariables":{
+      "CMAKE_CXX_STANDARD": "20",
+      "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+    }
+  }]
+}
