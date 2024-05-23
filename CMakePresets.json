@@ -1,15 +1,88 @@
 {
-  "version": 6,
-  "cmakeMinimumRequired":{
+  "version": 7,
+  "cmakeMinimumRequired": {
     "major": 3,
     "minor": 20,
     "patch": 0
   },
-  "configurePresets": [{
-    "name": "default",
-    "cacheVariables":{
-      "CMAKE_CXX_STANDARD": "20",
-      "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+  "configurePresets": [
+    {
+      "name": "linux-base-clang",
+      "displayName": "Linux-Base-Clang",
+      "hidden": true,
+      "generator": "Ninja",
+      "errors":{
+        "dev": true,
+        "deprecated": true
+      },
+      "warnings":{
+        "uninitialized": true
+      },
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++",
+        "CMAKE_CXX_STANDARD": "20",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "CMAKE_CXX_FLAGS": "-Wall -Wextra -Werror"
+      }
+    },
+    {
+      "name": "debug",
+      "displayName": "Debug",
+      "description": "Generator: Ninja, Compiler: Clang++, Build: Debug",
+      "inherits": "linux-base-clang",
+      "binaryDir": "${sourceDir}/build/debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
+    },
+    {
+      "name": "release",
+      "displayName": "Release",
+      "description": "Generator: Ninja, Compiler: Clang++, Build: Release",
+      "inherits": "linux-base-clang",
+      "binaryDir": "${sourceDir}/build/release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
     }
-  }]
+  ],
+  "buildPresets": [
+    {
+      "name": "debug",
+      "displayName": "Debug Build",
+      "description": "Builds a debug build with the following flags: -Wall -Wextra -Werror",
+      "cleanFirst":true,
+      "configurePreset": "debug",
+      "verbose": true,
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
+    },
+    {
+      "name": "release",
+      "displayName": "Release Build",
+      "description": "Builds a release build with the following flags: -Wall -Wextra -Werror",
+      "cleanFirst":true,
+      "configurePreset": "release",
+      "verbose": true,
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
+    }
+  ]
 }

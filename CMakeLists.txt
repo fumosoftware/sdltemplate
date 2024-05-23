@@ -19,3 +19,17 @@ add_executable(sdltemplate src/main.cpp)
 
 target_link_libraries(sdltemplate PRIVATE SDL3::SDL3 fmt)
 
+message("CMake Build Type: ${CMAKE_BUILD_TYPE}")
+
+message("CMAKE DIR: ${CMAKE_SOURCE_DIR}")
+
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+  message(STATUS "creating a symbolic link to build/debug/compile_commands.json")
+  file(CREATE_LINK "${CMAKE_SOURCE_DIR}/build/debug/compile_commands.json" "compile_commands.json" COPY_ON_ERROR SYMBOLIC)
+elseif("{$CMAKE_BUILD_TYPE}" STREQUAL "Release")
+  message(STATUS "creating a symbolic link to build/release/compile_commands.json")
+  file(CREATE_LINK "${CMAKE_SOURCE_DIR}/build/release/compile_commands.json" "compile_commands.json" COPY_ON_ERROR SYMBOLIC)
+endif()
+
+
+
