@@ -1,8 +1,6 @@
-#include <fmt/color.h>
+#include "app_main.h"
 
-
-int main([[maybe_unused]]int argc, [[maybe_unused]]char** argv) {
-  fmt::print(fg(fmt::color::green), "Hello, world!\n");
-
+int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
+  app_main();
   return 0;
 }
