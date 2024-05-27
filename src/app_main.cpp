@@ -1,14 +1,9 @@
 #include <SDL.h>
-#include <SDL_events.h>
-#include <SDL_render.h>
-#include <SDL_video.h>
-
-#include "console_printer.h"
+#include "logging.h"
 
 int app_main() {
-
+  logging::log("This is a test.");
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) != 0) {
-    print(Level::error, "Could not initialize the SDL context.");
     return 1;
   }
 

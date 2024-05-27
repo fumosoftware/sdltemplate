@@ -15,9 +15,17 @@ else()
   message(FATAL_ERROR "could not find package \"SDL3\"")
 endif()
 
-add_executable(sdltemplate src/main.cpp src/app_main.cpp src/console_printer.cpp)
+find_package(spdlog REQUIRED)
+if(${spdlog_FOUND})
+  message(STATUS "the package \"spdlog\" has been found")
+else()
+  message(FATAL_ERROR "could not find package \"spdlog\"")
+endif()
+
+add_executable(sdltemplate src/main.cpp src/app_main.cpp src/logging.cpp)
 
 target_link_libraries(sdltemplate PRIVATE SDL3::SDL3 fmt)
+target_link_libraries(sdltemplate PRIVATE spdlog::spdlog_header_only)
 
 message("CMake Build Type: ${CMAKE_BUILD_TYPE}")
 
