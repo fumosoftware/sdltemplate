@@ -4,6 +4,8 @@
 struct Ball {
   float x;
   float y;
+  float w;
+  float h;
 };
 
 #endif

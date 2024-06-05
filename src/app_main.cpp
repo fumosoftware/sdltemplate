@@ -4,6 +4,7 @@
 #include <SDL_render.h>
 #include <chrono>
 #include <cmath>
+#include <functional>
 
 using namespace std::chrono_literals;
 using duration = std::chrono::duration<double>;
@@ -12,12 +13,14 @@ using duration = std::chrono::duration<double>;
 namespace {
 constexpr auto fixed_dt = 1s / 100.;
 constexpr auto max_dt = .25s;
+constexpr auto window_width = 320;
+constexpr auto window_height = 180;
 SDL_Window *window{};
 SDL_Renderer *renderer{};
 std::chrono::time_point<std::chrono::steady_clock> previous_frame_time{};
 duration accumulator{0s};
-Ball old_ball{.x = 5, .y = 10};
-Ball ball{.x = 5, .y = 10};
+Ball old_ball{.x = 5, .y = 10, .w = 10, .h = 10};
+Ball ball{.x = 5, .y = 10, .w = 10, .h = 10};
 float x_vel = 50.f;
 bool is_running = true;
 } // namespace
@@ -30,7 +33,7 @@ int app_main() {
     return 1;
   }
 
-  window = SDL_CreateWindow("sdlapp", 320, 180, 0);
+  window = SDL_CreateWindow("sdlapp", window_width, window_height, 0);
   renderer = SDL_CreateRenderer(window, "window_renderer", -1);
 
   previous_frame_time = std::chrono::steady_clock::now();
@@ -76,8 +79,11 @@ void run_game_logic() {
   while (accumulator >= fixed_dt) {
     old_ball = ball;
     ball.x = ball.x + (x_vel * fixed_dt).count();
-    if (ball.x + 10 > 330 || ball.x - 10 < -20)
+    
+    //Check collision against window borders
+    if (ball.x + ball.w > window_width || ball.x - ball.w < -ball.w)
       x_vel *= -1.f;
+
     accumulator -= fixed_dt;
   }
 
@@ -90,7 +96,7 @@ void render() {
   SDL_RenderClear(renderer);
   SDL_SetRenderDrawColor(renderer, 255, 100, 200, 255);
 
-  SDL_FRect ball_rect{.x = ball.x, .y = ball.y, .w = 10, .h = 10};
+  SDL_FRect ball_rect{.x = ball.x, .y = ball.y, .w = ball.w, .h = ball.h};
   SDL_RenderFillRect(renderer, &ball_rect);
 
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
