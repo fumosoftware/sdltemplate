@@ -1,13 +1,13 @@
 #include "logging.h"
 #include <SDL.h>
+#include <SDL_render.h>
 #include <chrono>
 #include <cmath>
-#include <iostream>
+#include "ball.h"
 
 using namespace std::chrono_literals;
 
 constexpr auto fixed_dt = 1s / 100.;
-;
 constexpr auto max_dt = .25s;
 using duration = std::chrono::duration<double>;
 
@@ -25,6 +25,11 @@ int app_main() {
 
   SDL_Event event{};
   bool is_running = true;
+
+  Ball old_ball{.x = 5, .y = 10};
+  Ball ball{.x = 5, .y = 10};
+
+  float x_vel = 50.f;
 
   while (is_running) {
     while (SDL_PollEvent(&event)) {
@@ -49,18 +54,23 @@ int app_main() {
     accumulator += frame_dt;
 
     while (accumulator >= fixed_dt) {
-      // last_state = state;
-      // simulate(state, dt);
+      old_ball = ball;
+      ball.x = ball.x + (x_vel * fixed_dt).count(); 
+      if(ball.x + 10 > 330 || ball.x - 10 < -20) x_vel *= -1.f;
       accumulator -= fixed_dt;
     }
 
-    // auto const alpha = accumulator / fixed_dt;
     // integrate
-    // std::lerp(10, 10, alpha);
+     auto const alpha = accumulator / fixed_dt;
+     std::lerp(ball.x, old_ball.x, alpha);
 
     SDL_RenderClear(renderer);
     SDL_SetRenderDrawColor(renderer, 255, 100, 200, 255);
-    // render(state);
+
+    SDL_FRect ball_rect{.x = ball.x, .y = ball.y, .w = 10, .h = 10};
+    SDL_RenderFillRect(renderer, &ball_rect);
+
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderPresent(renderer);
   }
 
