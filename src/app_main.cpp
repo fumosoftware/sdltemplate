@@ -1,8 +1,17 @@
-#include <SDL.h>
 #include "logging.h"
+#include <SDL.h>
+#include <chrono>
+#include <cmath>
+#include <iostream>
+
+using namespace std::chrono_literals;
+
+constexpr auto fixed_dt = 1s / 100.;
+;
+constexpr auto max_dt = .25s;
+using duration = std::chrono::duration<double>;
 
 int app_main() {
-  logging::log("This is a test.");
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) != 0) {
     return 1;
   }
@@ -10,6 +19,9 @@ int app_main() {
   SDL_Window *const window = SDL_CreateWindow("sdlapp", 320, 180, 0);
   SDL_Renderer *const renderer =
       SDL_CreateRenderer(window, "window_renderer", -1);
+
+  auto previous_frame_time = std::chrono::steady_clock::now();
+  duration accumulator{0s};
 
   SDL_Event event{};
   bool is_running = true;
@@ -29,8 +41,26 @@ int app_main() {
     if (!is_running)
       break;
 
+    auto const current_frame_time = std::chrono::steady_clock::now();
+    auto const frame_dt = (current_frame_time - previous_frame_time) > max_dt
+                              ? max_dt
+                              : (current_frame_time - previous_frame_time);
+    previous_frame_time = current_frame_time;
+    accumulator += frame_dt;
+
+    while (accumulator >= fixed_dt) {
+      // last_state = state;
+      // simulate(state, dt);
+      accumulator -= fixed_dt;
+    }
+
+    // auto const alpha = accumulator / fixed_dt;
+    // integrate
+    // std::lerp(10, 10, alpha);
+
     SDL_RenderClear(renderer);
     SDL_SetRenderDrawColor(renderer, 255, 100, 200, 255);
+    // render(state);
     SDL_RenderPresent(renderer);
   }
 
