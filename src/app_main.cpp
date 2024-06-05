@@ -1,10 +1,8 @@
 #include "ball.h"
-#include "logging.h"
 #include <SDL.h>
 #include <SDL_render.h>
 #include <chrono>
 #include <cmath>
-#include <functional>
 
 using namespace std::chrono_literals;
 using duration = std::chrono::duration<double>;
