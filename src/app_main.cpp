@@ -5,7 +5,7 @@
 #include <cmath>
 
 using namespace std::chrono_literals;
-using duration = std::chrono::duration<double>;
+using Duration = std::chrono::duration<double>;
 
 //Represents the entire gamestate
 namespace {
@@ -16,7 +16,7 @@ constexpr auto window_height = 180;
 SDL_Window *window{};
 SDL_Renderer *renderer{};
 std::chrono::time_point<std::chrono::steady_clock> previous_frame_time{};
-duration accumulator{0s};
+Duration accumulator{0s};
 Ball old_ball{.x = 5, .y = 10, .w = 10, .h = 10};
 Ball ball{.x = 5, .y = 10, .w = 10, .h = 10};
 float x_vel = 50.f;
