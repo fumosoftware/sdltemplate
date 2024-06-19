@@ -1,6 +1,7 @@
 #include "sdlapp.h"
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_events.h>
+#include <SDL3/SDL_init.h>
 #include <SDL3/SDL_render.h>
 #include <iostream>
 
@@ -72,17 +73,38 @@ SDLApp::SDLApp(unsigned int const width, unsigned int const height) noexcept {
     is_running_ = false;
   }
 
-  window_.reset(SDL_CreateWindow("Title", width, height, 0));
+  window_ = SDL_CreateWindow("Title", width, height, 0);
   if (!window_) {
     // Log Error
     std::cout << "No window\n";
     is_running_ = false;
   }
-  renderer_.reset(SDL_CreateRenderer(window_.get(), nullptr));
+  renderer_ = SDL_CreateRenderer(window_, nullptr);
   if (!renderer_) {
     // Log Error
     std::cout << "No renderer\n";
     is_running_ = false;
+  }
+}
+
+SDLApp::SDLApp(SDLApp &&other) noexcept {
+  //Increment the internal counter for SDL_Video and SDL_Event
+  // in order to prevent them from being destroyed by our destructor.
+  SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
+
+  this->renderer_ = std::move(other.renderer_);
+  this->window_ = std::move(other.window_);
+}
+
+SDLApp::~SDLApp() noexcept {
+  // SDL_Quit destroys objects as well as attempting to de-initialize everything
+  // So we first call SDL_QuitSubsystem(...) to attempt to de-initialize, then
+  // if everything was successfully de-initialized, we can call SDL_Quit
+  SDL_QuitSubSystem(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
+  if (SDL_WasInit(SDL_INIT_VIDEO | SDL_INIT_EVENTS) == 0) {
+    SDL_DestroyRenderer(renderer_);
+    SDL_DestroyWindow(window_);
+    SDL_Quit();
   }
 }
 
@@ -98,19 +120,19 @@ int SDLApp::run() noexcept {
                               : (current_frame_time - previous_frame_time);
     previous_frame_time = current_frame_time;
     accumulator += frame_dt;
-  
+
     while (accumulator >= fixed_dt) {
       old_ball = ball;
       ball.x = ball.x + (x_vel * fixed_dt).count();
-  
+
       //Check collision against window borders
       if (ball.x + ball.w > window_width || ball.x - ball.w < -ball.w)
         x_vel *= -1.f;
-  
-  
+
+
       accumulator -= fixed_dt;
     }
-  
+
     // integrate to accomidate for leftover time in the accumulator
     auto const alpha = accumulator / fixed_dt;
     std::lerp(ball.x, old_ball.x, alpha);
@@ -136,7 +158,7 @@ void SDLApp::process_events() noexcept {
 
 void SDLApp::draw() noexcept {
 
-  SDL_SetRenderDrawColor(renderer_.get(), 255, 100, 200, 200);
-  SDL_RenderClear(renderer_.get());
-  SDL_RenderPresent(renderer_.get());
+  SDL_SetRenderDrawColor(renderer_, 255, 100, 200, 200);
+  SDL_RenderClear(renderer_);
+  SDL_RenderPresent(renderer_);
 }
