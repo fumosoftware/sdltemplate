@@ -24,6 +24,7 @@ class SDLApp final {
   static constexpr auto DEFAULT_HEIGHT{120u};
 
 public:
+  static constexpr auto SDL_SUBSYSTEMS = SDL_INIT_VIDEO | SDL_INIT_EVENTS;
   enum struct Error {
     INITIALIZATION_FAILED,
     WINDOW_CREATION,
@@ -72,33 +73,6 @@ public:
    */
   static std::variant<SDLApp, Error>
   create_from(std::filesystem::path const path) noexcept;
-
-  /**
-   * Destructor.
-   * Runs SDL_Quit, and not much else.
-   *
-   */
-  ~SDLApp() noexcept;
-
-  /**
-   * Deleted copy constructor.
-   */
-  SDLApp(SDLApp const&) = delete;
-
-  /**
-   * Move constructor.
-   */
-  SDLApp(SDLApp&& other) noexcept;
-
-  /**
-   * Deleted copy-assignment operator.
-   */
-  SDLApp& operator=(SDLApp const&) = delete;
-
-  /**
-   * Deleted move-assignment operator.
-   */
-  SDLApp& operator=(SDLApp&&) noexcept = delete;
   
   /**
    * Runs the application loop.
@@ -153,11 +127,8 @@ private:
    */
   void draw() noexcept;
 
-  // Do not use smart pointers for SDL_Window or SDL_Renderer.
-  // This is because we call SDL_Quit in our destructor, which ends up 
-  // causing some issues if it is called before we destroy SDL_Window or SDL_Renderer.
-  SDL_Window* window_{};
-  SDL_Renderer* renderer_{};
+  std::unique_ptr<SDL_Window, void(*)(SDL_Window*)> window_{nullptr, SDL_DestroyWindow};
+  std::unique_ptr<SDL_Renderer, void(*)(SDL_Renderer*)> renderer_{nullptr, SDL_DestroyRenderer};
   bool is_running_{true};
 };
 

@@ -10,8 +10,8 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
 }
 
 int app_main(std::filesystem::path const path) noexcept {
-
-  return std::visit(
+  SDL_Init(SDLApp::SDL_SUBSYSTEMS);
+  auto const returnVal = std::visit(
       [](auto &&val) {
         using T = std::decay_t<decltype(val)>;
         if constexpr (std::is_same_v<T, SDLApp> == true) {
@@ -31,4 +31,7 @@ int app_main(std::filesystem::path const path) noexcept {
         }
       },
       SDLApp::create_from(path));
+
+  SDL_Quit();
+  return returnVal;
 }

@@ -32,10 +32,11 @@ bool is_running = true;
 
 std::variant<SDLApp, SDLApp::Error> SDLApp::create() noexcept {
 
-  SDLApp app{};
   if (SDL_WasInit(0) != (SDL_INIT_VIDEO | SDL_INIT_EVENTS)) {
     return Error::INITIALIZATION_FAILED;
   }
+
+  SDLApp app{};
 
   if (!app.window_) {
     return Error::WINDOW_CREATION;
@@ -50,6 +51,10 @@ std::variant<SDLApp, SDLApp::Error> SDLApp::create() noexcept {
 
 std::variant<SDLApp, SDLApp::Error>
 SDLApp::create_from(std::filesystem::path const path) noexcept {
+
+  if (SDL_WasInit(0) != (SDL_INIT_VIDEO | SDL_INIT_EVENTS)) {
+    return Error::INITIALIZATION_FAILED;
+  }
 
   if (!std::filesystem::exists(path)) {
     std::cout << "Config not found\n";
@@ -67,44 +72,17 @@ SDLApp::create_from(std::filesystem::path const path) noexcept {
 SDLApp::SDLApp() noexcept : SDLApp(DEFAULT_WIDTH, DEFAULT_HEIGHT) {}
 
 SDLApp::SDLApp(unsigned int const width, unsigned int const height) noexcept {
-  if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) != 0) {
-    // Log Error
-    std::cout << "Nothing initialized\n";
-    is_running_ = false;
-  }
-
-  window_ = SDL_CreateWindow("Title", width, height, 0);
+  window_.reset(SDL_CreateWindow("Title", width, height, 0));
   if (!window_) {
     // Log Error
     std::cout << "No window\n";
     is_running_ = false;
   }
-  renderer_ = SDL_CreateRenderer(window_, nullptr);
+  renderer_.reset(SDL_CreateRenderer(window_.get(), nullptr));
   if (!renderer_) {
     // Log Error
     std::cout << "No renderer\n";
     is_running_ = false;
-  }
-}
-
-SDLApp::SDLApp(SDLApp &&other) noexcept {
-  //Increment the internal counter for SDL_Video and SDL_Event
-  // in order to prevent them from being destroyed by our destructor.
-  SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
-
-  this->renderer_ = std::move(other.renderer_);
-  this->window_ = std::move(other.window_);
-}
-
-SDLApp::~SDLApp() noexcept {
-  // SDL_Quit destroys objects as well as attempting to de-initialize everything
-  // So we first call SDL_QuitSubsystem(...) to attempt to de-initialize, then
-  // if everything was successfully de-initialized, we can call SDL_Quit
-  SDL_QuitSubSystem(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
-  if (SDL_WasInit(SDL_INIT_VIDEO | SDL_INIT_EVENTS) == 0) {
-    SDL_DestroyRenderer(renderer_);
-    SDL_DestroyWindow(window_);
-    SDL_Quit();
   }
 }
 
@@ -158,7 +136,7 @@ void SDLApp::process_events() noexcept {
 
 void SDLApp::draw() noexcept {
 
-  SDL_SetRenderDrawColor(renderer_, 255, 100, 200, 200);
-  SDL_RenderClear(renderer_);
-  SDL_RenderPresent(renderer_);
+  SDL_SetRenderDrawColor(renderer_.get(), 155, 200, 200, 200);
+  SDL_RenderClear(renderer_.get());
+  SDL_RenderPresent(renderer_.get());
 }
