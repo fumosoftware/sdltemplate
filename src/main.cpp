@@ -1,19 +1,34 @@
-#include <memory>
-#include <spdlog/sinks/basic_file_sink.h>
-#include <spdlog/spdlog.h>
+#include <iostream>
+#include <type_traits>
+#include <variant>
 
-#include "app_main.h"
+#include "sdlapp.h"
 
-void setup_logging();
+int app_main(std::filesystem::path const path) noexcept;
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
-  setup_logging();
-  app_main();
-  return 0;
+  return app_main("./data/config.toml");
 }
 
-void setup_logging() {
-  auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(
-      "logs/debug.log", true);
+int app_main(std::filesystem::path const path) noexcept {
 
-  spdlog::default_logger()->sinks().push_back(file_sink);
+  return std::visit(
+      [](auto &&val) {
+        using T = std::decay_t<decltype(val)>;
+        if constexpr (std::is_same_v<T, SDLApp> == true) {
+          return val.run();
+        } else {
+          switch (val) {
+          case SDLApp::Error::INITIALIZATION_FAILED:
+            std::cout << "Failed to initialize SDL.\n";
+            return 1;
+          case SDLApp::Error::WINDOW_CREATION:
+            std::cout << "Failed to create a window.\n";
+            return 2;
+          case SDLApp::Error::RENDERER_CREATION:
+            std::cout << "Failed to create a renderer.\n";
+            return 3;
+          }
+        }
+      },
+      SDLApp::create_from(path));
 }
