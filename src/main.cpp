@@ -1,34 +1,34 @@
-#include <iostream>
-#include <type_traits>
-#include <variant>
-
 #include "sdlapp.h"
 
-int app_main(std::filesystem::path const path) noexcept;
-int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
-  return app_main("./data/config.toml");
-}
+int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) noexcept {
 
-int app_main(std::filesystem::path const path) noexcept {
 
-  return std::visit(
-      [](auto &&val) {
-        using T = std::decay_t<decltype(val)>;
-        if constexpr (std::is_same_v<T, SDLApp> == true) {
-          return val.run();
-        } else {
-          switch (val) {
-          case SDLApp::Error::INITIALIZATION_FAILED:
-            std::cout << "Failed to initialize SDL.\n";
-            return 1;
-          case SDLApp::Error::WINDOW_CREATION:
-            std::cout << "Failed to create a window.\n";
-            return 2;
-          case SDLApp::Error::RENDERER_CREATION:
-            std::cout << "Failed to create a renderer.\n";
-            return 3;
-          }
-        }
-      },
-      SDLApp::create_from(path));
+  return SDLApp::exec();
+
+    
+    /*
+    auto const current_frame_time = std::chrono::steady_clock::now();
+    auto const frame_dt = (current_frame_time - previous_frame_time) > max_dt
+                              ? max_dt
+                              : (current_frame_time - previous_frame_time);
+    previous_frame_time = current_frame_time;
+    accumulator += frame_dt;
+
+    while (accumulator >= fixed_dt) {
+      old_ball = ball;
+      ball.x = ball.x + (x_vel * fixed_dt).count();
+
+      //Check collision against window borders
+      if (ball.x + ball.w > window_width || ball.x - ball.w < -ball.w)
+        x_vel *= -1.f;
+
+
+      accumulator -= fixed_dt;
+    }
+
+    // integrate to accomidate for leftover time in the accumulator
+    auto const alpha = accumulator / fixed_dt;
+    std::lerp(ball.x, old_ball.x, alpha);
+  return 0;
+    */
 }
