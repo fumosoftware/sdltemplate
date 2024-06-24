@@ -22,12 +22,12 @@ else()
   message(FATAL_ERROR "could not find package \"SDL3\"")
 endif()
 
-#find_package(spdlog REQUIRED)
-#if(${spdlog_FOUND})
-#message(STATUS "the package \"spdlog\" has been found")
-#else()
-#message(FATAL_ERROR "could not find package \"spdlog\"")
-#endif()
+find_package(spdlog REQUIRED)
+if(${spdlog_FOUND})
+  message(STATUS "the package \"spdlog\" has been found")
+else()
+  message(FATAL_ERROR "could not find package \"spdlog\"")
+endif()
 
 add_executable(sdltemplate src/main.cpp src/sdlapp.cpp)
 
