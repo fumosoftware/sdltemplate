@@ -1,6 +1,7 @@
 #ifndef APP_SDLAPP_H_
 #define APP_SDLAPP_H_
 
+#include "config.h"
 #include <SDL3/SDL.h>
 #include <spdlog/fmt/fmt.h>
 #include <toml++/toml.h>
@@ -76,7 +77,7 @@ private:
    */
   void draw() noexcept;
 
-  toml::table config_{};
+  toml::table config_{load_or_create_config()};
   bool is_running{true};
   SDL_Window *window_{nullptr};
   SDL_Renderer *renderer_{nullptr};

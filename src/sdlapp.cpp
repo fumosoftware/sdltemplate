@@ -5,14 +5,13 @@
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_render.h>
 #include <spdlog/spdlog.h>
-#include <toml++/toml.h>
 
 using namespace std::literals;
 namespace {
 constexpr std::uint32_t INIT_FLAGS{SDL_INIT_VIDEO | SDL_INIT_EVENTS};
 } // namespace
 
-SDLApp::SDLApp() : config_{load_or_create_config()} {
+SDLApp::SDLApp() {
   if (SDL_Init(INIT_FLAGS) != 0) {
     throw SDLException{"Can not continue execution of application.",
                        SDL_GetError()};
