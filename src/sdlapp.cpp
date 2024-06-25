@@ -24,8 +24,8 @@ SDLApp::SDLApp() : config_{toml::parse(DEFAULT_CONFIG)} {
                        SDL_GetError()};
   }
 
-  auto const width = config_["window"]["width"].value_or(380);
-  auto const height = config_["window"]["width"].value_or(160);
+  auto const width = config_["window"]["width"].value_or(1000);
+  auto const height = config_["window"]["width"].value_or(680);
   if (SDL_CreateWindowAndRenderer("Title", width, height, 0, &window_,
                                   &renderer_) != 0) {
     throw SDLException("Can not continue execution of application.",

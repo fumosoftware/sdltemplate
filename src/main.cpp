@@ -1,5 +1,5 @@
 #include "sdlapp.h"
-#include <iostream>
+#include <spdlog/spdlog.h>
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) noexcept {
 
@@ -8,7 +8,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) noexcept {
     return SDLApp{}.run();
   }
   catch(SDLException const& error) {
-    std::cout << error.what() << "\n";
+    spdlog::error(error.what());
   }
 
   return 1;
