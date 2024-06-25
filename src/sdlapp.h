@@ -2,6 +2,7 @@
 #define APP_SDLAPP_H_
 
 #include "config.h"
+#include "game.h"
 #include <SDL3/SDL.h>
 #include <spdlog/fmt/fmt.h>
 #include <toml++/toml.h>
@@ -73,14 +74,21 @@ private:
   void process_events() noexcept;
 
   /**
+   *
+   *
+   */
+  void update() noexcept;
+
+  /**
    * Draws the current app state to the screen.
    */
   void draw() noexcept;
 
   toml::table config_{load_or_create_config()};
-  bool is_running{true};
+  bool is_running_{true};
   SDL_Window *window_{nullptr};
   SDL_Renderer *renderer_{nullptr};
+  Game game_{};
 };
 
 /**
