@@ -1,24 +1,41 @@
 #ifndef APP_SDLAPP_H_
 #define APP_SDLAPP_H_
 
-#include <memory>
-#include <optional>
 #include <SDL3/SDL.h>
+#include <spdlog/fmt/fmt.h>
+#include <toml++/toml.h>
 
-class SDLApp {
+class SDLApp final {
 public:
-  static int exec() noexcept;
-private:
-  static std::optional<SDLApp> create() noexcept;
+  SDLApp();
+  SDLApp(SDLApp const&) = delete;
+  SDLApp(SDLApp&&) noexcept = delete;
+  SDLApp& operator=(SDLApp const&) = delete;
+  SDLApp& operator=(SDLApp&&) noexcept = delete;
+  ~SDLApp();
 
-  explicit SDLApp(SDL_Window* window, SDL_Renderer* renderer) noexcept;
   int run() noexcept;
+private:
   void process_events() noexcept;
   void draw() noexcept;
 
-  std::unique_ptr<SDL_Window, void(*)(SDL_Window*)> window_{nullptr, SDL_DestroyWindow};
-  std::unique_ptr<SDL_Renderer, void(*)(SDL_Renderer*)> renderer{nullptr, SDL_DestroyRenderer};
   bool is_running{true};
+  SDL_Window* window_{nullptr};
+  SDL_Renderer* renderer_{nullptr};
+  toml::table config_{};
+};
+
+class SDLException : public std::runtime_error {
+public:
+  explicit SDLException(std::string_view message, std::string_view reason) noexcept
+      : std::runtime_error(message.data()),
+        message_{fmt::format("EXCEPTION: {}\nREASON: {}", message.data(),
+                             reason.data())} {}
+
+  char const *what() const noexcept override { return message_.c_str(); }
+
+private:
+  std::string message_{};
 };
 
 #endif

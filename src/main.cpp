@@ -1,9 +1,18 @@
 #include "sdlapp.h"
+#include <iostream>
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) noexcept {
 
 
-  return SDLApp::exec();
+  try {
+    return SDLApp{}.run();
+  }
+  catch(SDLException const& error) {
+    std::cout << error.what() << "\n";
+  }
+
+  return 1;
+}
 
     
     /*
@@ -30,5 +39,5 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) noexcept {
     auto const alpha = accumulator / fixed_dt;
     std::lerp(ball.x, old_ball.x, alpha);
   return 0;
-    */
 }
+    */

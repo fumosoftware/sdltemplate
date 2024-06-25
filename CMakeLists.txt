@@ -8,12 +8,12 @@ else()
   message(FATAL_ERROR "could not find package \"tomlplusplus\"")
 endif()
 
-#find_package(fmt)
-#if(${fmt_FOUND})
-#message(STATUS "the package \"fmt\" has been found")
-#else()
-#message(FATAL_ERROR "could not find package \"fmt\"")
-#endif()
+find_package(fmt)
+if(${fmt_FOUND})
+  message(STATUS "the package \"fmt\" has been found")
+else()
+  message(FATAL_ERROR "could not find package \"fmt\"")
+endif()
 
 find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS SDL3-shared)
 if(${SDL3_FOUND})
@@ -31,7 +31,7 @@ endif()
 
 add_executable(sdltemplate src/main.cpp src/sdlapp.cpp)
 
-target_link_libraries(sdltemplate PRIVATE SDL3::SDL3 tomlplusplus::tomlplusplus)
+target_link_libraries(sdltemplate PRIVATE SDL3::SDL3 tomlplusplus::tomlplusplus spdlog::spdlog fmt::fmt)
 #target_link_libraries(sdltemplate PRIVATE spdlog::spdlog_header_only)
 
 message("CMake Build Type: ${CMAKE_BUILD_TYPE}")
