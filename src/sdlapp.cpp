@@ -1,4 +1,5 @@
 #include "sdlapp.h"
+#include "config.h"
 #include <cstdint>
 
 #include <SDL3/SDL_events.h>
@@ -9,16 +10,9 @@
 using namespace std::literals;
 namespace {
 constexpr std::uint32_t INIT_FLAGS{SDL_INIT_VIDEO | SDL_INIT_EVENTS};
-constexpr std::string_view DEFAULT_CONFIG{
-    R"(
-[window]
-width  = 1000
-height = 680
-  )"sv};
-
 } // namespace
 
-SDLApp::SDLApp() : config_{toml::parse(DEFAULT_CONFIG)} {
+SDLApp::SDLApp() : config_{load_or_create_config()} {
   if (SDL_Init(INIT_FLAGS) != 0) {
     throw SDLException{"Can not continue execution of application.",
                        SDL_GetError()};
