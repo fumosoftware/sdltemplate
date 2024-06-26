@@ -1,10 +1,13 @@
 #include "sdlapp.h"
 #include <cstdint>
 
+#include <iostream>
+#include <chrono>
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_render.h>
 #include <spdlog/spdlog.h>
 
+using Duration = std::chrono::duration<float>;
 using namespace std::literals;
 namespace {
 constexpr std::uint32_t INIT_FLAGS{SDL_INIT_VIDEO | SDL_INIT_EVENTS};
@@ -52,6 +55,7 @@ void SDLApp::process_events() noexcept {
         break;
       }
       game_.process_event(event);
+      break;
     default:
       game_.process_event(event);
       break;
@@ -59,7 +63,9 @@ void SDLApp::process_events() noexcept {
   }
 }
 
-void SDLApp::update() noexcept { game_.update(10.f); }
+void SDLApp::update() noexcept {
+  game_.update();
+}
 
 void SDLApp::draw() noexcept {
   SDL_RenderClear(renderer_);
