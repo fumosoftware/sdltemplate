@@ -1,6 +1,5 @@
 #include "game.h"
 #include <SDL3/SDL_render.h>
-#include <iostream>
 #include <chrono>
 
 using Duration = std::chrono::duration<float>;
@@ -23,22 +22,29 @@ void Game::update() noexcept {
   if (accumulator < fixed_dt)
     return;
   while (accumulator >= fixed_dt) {
-    //This may be a performance killer?
-    //We did not put the timing logic within std::visit because
-    //then we would not be able to change state from within std::visit 
+    // This may be a performance killer?
+    // We did not put the timing logic within std::visit because
+    // then we would not be able to change state from within std::visit
     //(changing state and then accessing while inside std::visit is UB)
-    //If this is too much, put the timing logic within the std::visit and
-    //add substates to the current state
+    // If this is too much, put the timing logic within the std::visit and
+    // add substates to the current state
     //( Game::GamePlay::Menu, Game::GamePlay::GameOver,... instead of
-    // Game::Menu, Game::GameOver, ...)
-    std::visit(
+    //  Game::Menu, Game::GameOver, ...)
+    auto maybe_state = std::visit(
         [&](auto &&state) {
           using T = std::decay_t<decltype(state)>;
           if constexpr (std::is_same_v<T, std::monostate> == false) {
-            this->update(state, fixed_dt.count());
-          }
+            return this->update(state, fixed_dt.count());
+          } else {
+
+          return std::nullopt;
+        }
         },
         current_state_);
+
+    if(maybe_state) {
+      current_state_ = maybe_state.value();
+    }
 
     accumulator -= fixed_dt;
   }
@@ -51,14 +57,20 @@ void Game::update() noexcept {
 
 void Game::process_event(SDL_Event const &event) noexcept {
 
-  std::visit(
+  auto maybe_state = std::visit(
       [&](auto &&state) {
         using T = std::decay_t<decltype(state)>;
         if constexpr (std::is_same_v<T, std::monostate> == false) {
-          process_event(state, event);
+          return process_event(state, event);
+        } else {
+          return std::nullopt;
         }
       },
       current_state_);
+
+  if(maybe_state) {
+    current_state_ = *maybe_state;
+  }
 }
 
 void Game::draw(SDL_Renderer *renderer) const noexcept {
@@ -73,45 +85,54 @@ void Game::draw(SDL_Renderer *renderer) const noexcept {
       current_state_);
 }
 
-void Game::update([[maybe_unused]] Title &state,
-                  [[maybe_unused]] float const dt) noexcept {
+std::optional<Game::GameState>
+Game::update([[maybe_unused]] TitleScreen &state,
+             [[maybe_unused]] float const dt) noexcept {
   // std::cout << "In title state\n";
+  return std::nullopt;
 }
-void Game::update([[maybe_unused]] Gameplay &state,
-                  [[maybe_unused]] float const dt) noexcept {
+std::optional<Game::GameState>
+Game::update([[maybe_unused]] GameScreen &state,
+             [[maybe_unused]] float const dt) noexcept {
   // std::cout << "In gameplay state\n";
+  return std::nullopt;
 }
 
-void Game::process_event([[maybe_unused]] Title &state,
-                         [[maybe_unused]] SDL_Event const &event) noexcept {
+std::optional<Game::GameState>
+Game::process_event([[maybe_unused]] TitleScreen &state,
+                    [[maybe_unused]] SDL_Event const &event) noexcept {
   switch (event.type) {
   case SDL_EVENT_KEY_DOWN: {
     if (event.key.keysym.scancode == SDL_SCANCODE_A) {
-      current_state_ = Gameplay{};
+      return GameScreen{};
     }
   } break;
   default:
     break;
   }
+  return std::nullopt;
 }
-void Game::process_event([[maybe_unused]] Gameplay &state,
-                         [[maybe_unused]] SDL_Event const &event) noexcept {
+std::optional<Game::GameState>
+Game::process_event([[maybe_unused]] GameScreen &state,
+                    [[maybe_unused]] SDL_Event const &event) noexcept {
   switch (event.type) {
   case SDL_EVENT_KEY_DOWN: {
-    if (event.key.keysym.scancode == SDL_SCANCODE_W) {
-      current_state_ = Title{};
+    if (event.key.keysym.scancode == SDL_SCANCODE_S) {
+      return TitleScreen{};
     }
   } break;
   default:
     break;
   }
+
+  return std::nullopt;
 }
 
-void Game::draw([[maybe_unused]] Title const &,
+void Game::draw([[maybe_unused]] TitleScreen const &,
                 [[maybe_unused]] SDL_Renderer *renderer) const noexcept {
   SDL_SetRenderDrawColor(renderer, 255, 0, 0, 200);
 }
-void Game::draw([[maybe_unused]] Gameplay const &,
+void Game::draw([[maybe_unused]] GameScreen const &,
                 [[maybe_unused]] SDL_Renderer *renderer) const noexcept {
   SDL_SetRenderDrawColor(renderer, 255, 255, 0, 200);
 }
