@@ -1,4 +1,4 @@
-#include "game.h"
+/*#include "game.h"
 #include <SDL3/SDL_render.h>
 #include <chrono>
 
@@ -136,3 +136,4 @@ void Game::draw([[maybe_unused]] GameScreen const &,
                 [[maybe_unused]] SDL_Renderer *renderer) const noexcept {
   SDL_SetRenderDrawColor(renderer, 255, 255, 0, 200);
 }
+*/

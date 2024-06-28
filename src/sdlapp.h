@@ -2,10 +2,10 @@
 #define APP_SDLAPP_H_
 
 #include "config.h"
-#include "game.h"
 #include <SDL3/SDL.h>
 #include <spdlog/fmt/fmt.h>
 #include <toml++/toml.h>
+#include "gamescreens.h"
 
 /**
  * Encapsulates the application loop and logic.
@@ -88,7 +88,8 @@ private:
   bool is_running_{true};
   SDL_Window *window_{nullptr};
   SDL_Renderer *renderer_{nullptr};
-  Game game_{};
+  GameScreens screens_{};
+  //Game game_{};
 };
 
 /**
