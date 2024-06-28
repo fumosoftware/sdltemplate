@@ -8,10 +8,31 @@
 #include <SDL3/SDL.h>
 #include <variant>
 
+/**
+ * \class Screens
+ * \brief Manages the current state of the application.
+ *
+ * A finite-state machine implementation to help
+ * manage the state of the application itself.
+ *
+ * A "Screen" can be thought of as a seperate, distinct
+ * state of the application that is not a substate of the application.
+ *
+ * For example, the "Title Screen" and "Level Select" screens are
+ * completely different states of an application, but a "Menu Screen"
+ * can be a sub-state of the main gameplay screen.
+ */
 class Screens final {
-using Screen =
-    std::variant<Title, Game, Settings, GameOver>;
+  using Screen = std::variant<Title, Game, Settings, GameOver>;
+
 public:
+  /**< Changes from the current screen to another screen */
+  /**
+   * Replaces the current screen with an instance of another screen.
+   * Because of this, changing screens must only happen
+   * from handling an event, and must not happen from inside the update loop.
+   *
+   */
   void change_screen(auto screen) noexcept
     requires std::is_same_v<decltype(screen), Title> ||
              std::is_same_v<decltype(screen), Game> ||
