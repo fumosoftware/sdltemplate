@@ -1,6 +1,5 @@
 #include "sdlapp.h"
 #include <cstdint>
-
 #include <chrono>
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_render.h>
