@@ -29,7 +29,7 @@ else()
   message(FATAL_ERROR "could not find package \"spdlog\"")
 endif()
 
-add_executable(sdltemplate src/main.cpp src/sdlapp.cpp src/config.cpp src/gamescreens.cpp)
+add_executable(sdltemplate src/main.cpp src/sdlapp.cpp src/config.cpp src/screens.cpp src/screens/game.cpp src/screens/gameover.cpp src/screens/settings.cpp src/screens/title.cpp)
 
 target_link_libraries(sdltemplate PRIVATE SDL3::SDL3 tomlplusplus::tomlplusplus spdlog::spdlog fmt::fmt)
 #target_link_libraries(sdltemplate PRIVATE spdlog::spdlog_header_only)

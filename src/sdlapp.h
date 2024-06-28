@@ -5,7 +5,7 @@
 #include <SDL3/SDL.h>
 #include <spdlog/fmt/fmt.h>
 #include <toml++/toml.h>
-#include "gamescreens.h"
+#include "screens.h"
 
 /**
  * Encapsulates the application loop and logic.
@@ -88,7 +88,7 @@ private:
   bool is_running_{true};
   SDL_Window *window_{nullptr};
   SDL_Renderer *renderer_{nullptr};
-  GameScreens screens_{};
+  Screens screens_{};
   //Game game_{};
 };
 
