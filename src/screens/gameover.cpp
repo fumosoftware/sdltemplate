@@ -2,8 +2,7 @@
 #include "../screens.h"
 #include <iostream>
 
-void GameOver::process_event(SDL_Event const &event,
-                                   Screens &screen) noexcept {
+void GameOver::process_event(SDL_Event const &event, Screens &screen) noexcept {
 
   if (event.type == SDL_EVENT_KEY_DOWN) {
     switch (event.key.keysym.scancode) {

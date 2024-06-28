@@ -1,8 +1,8 @@
 #include "sdlapp.h"
-#include <cstdint>
-#include <chrono>
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_render.h>
+#include <chrono>
+#include <cstdint>
 #include <spdlog/spdlog.h>
 
 using Duration = std::chrono::duration<float>;
@@ -55,15 +55,13 @@ void SDLApp::process_events() noexcept {
       screens_.process_event(event);
       break;
     default:
-        screens_.process_event(event);
+      screens_.process_event(event);
       break;
     }
   }
 }
 
-void SDLApp::update() noexcept {
-  screens_.update(10.f);
-}
+void SDLApp::update() noexcept { screens_.update(10.f); }
 
 void SDLApp::draw() noexcept {
   SDL_RenderClear(renderer_);

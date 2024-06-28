@@ -2,8 +2,7 @@
 #include "../screens.h"
 #include <iostream>
 
-void Settings::process_event(SDL_Event const &event,
-                                   Screens &screen) noexcept {
+void Settings::process_event(SDL_Event const &event, Screens &screen) noexcept {
 
   if (event.type == SDL_EVENT_KEY_DOWN) {
     switch (event.key.keysym.scancode) {
@@ -23,5 +22,3 @@ void Settings::update([[maybe_unused]] float dt) noexcept {
 void Settings::draw(SDL_Renderer *renderer) const noexcept {
   SDL_SetRenderDrawColor(renderer, 0, 255, 0, 100);
 }
-
-
