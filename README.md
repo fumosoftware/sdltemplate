@@ -7,6 +7,8 @@ this project depends on some libraries:
 * fmt
 * spdlog
 * sdl3
+* toml++
+* entt
 
 **this project is built with c++20 in mind. it may not work if you are trying to build for 11, 14, or 17**
 
