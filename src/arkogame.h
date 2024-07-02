@@ -49,6 +49,8 @@ public:
   void draw(SDL_Renderer *renderer) const noexcept;
 
 private:
+  void interpolate(float remainder) noexcept;
+
   entt::registry world_{};
   Screen current_screen_;
 };
