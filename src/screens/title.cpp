@@ -1,16 +1,17 @@
 #include "title.h"
-#include "../screens.h"
+#include "../arkogame.h"
 #include <iostream>
 
-void Title::process_event(SDL_Event const &event, Screens &screen) noexcept {
+Title::Title(entt::registry* world) noexcept : world_{world} {}
+void Title::process_event(SDL_Event const &event, ArkoGame &screen) noexcept {
 
   if (event.type == SDL_EVENT_KEY_DOWN) {
     switch (event.key.keysym.scancode) {
     case SDL_SCANCODE_G:
-      screen.change_screen(Game{});
+      screen.change_screen(Game{world_});
       break;
     case SDL_SCANCODE_S:
-      screen.change_screen(Settings{});
+      screen.change_screen(Settings{world_});
       break;
     default:
       break;

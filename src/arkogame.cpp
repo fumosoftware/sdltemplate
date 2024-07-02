@@ -1,15 +1,18 @@
-#include "screens.h"
+#include "arkogame.h"
 #include <chrono>
 
 using Duration = std::chrono::duration<float>;
 using namespace std::literals;
-void Screens::process_event(SDL_Event const &event) noexcept {
+
+ArkoGame::ArkoGame() noexcept : current_screen_{Title{&world_}} {}
+
+void ArkoGame::process_event(SDL_Event const &event) noexcept {
   std::visit(
       [event, this](auto &&screen) { screen.process_event(event, *this); },
       current_screen_);
 }
 
-void Screens::update([[maybe_unused]] float dt) noexcept {
+void ArkoGame::update([[maybe_unused]] float dt) noexcept {
   static auto previous_frame_time = std::chrono::steady_clock::now();
   static Duration accumulator{0s};
   static auto max_dt{.25s};
@@ -40,7 +43,7 @@ void Screens::update([[maybe_unused]] float dt) noexcept {
       current_screen_);
 }
 
-void Screens::draw(SDL_Renderer *renderer) const noexcept {
+void ArkoGame::draw(SDL_Renderer *renderer) const noexcept {
   std::visit([renderer](auto &&screen) { screen.draw(renderer); },
              current_screen_);
 }

@@ -52,20 +52,20 @@ void SDLApp::process_events() noexcept {
         is_running_ = false;
         break;
       }
-      screens_.process_event(event);
+      game_.process_event(event);
       break;
     default:
-      screens_.process_event(event);
+      game_.process_event(event);
       break;
     }
   }
 }
 
-void SDLApp::update() noexcept { screens_.update(10.f); }
+void SDLApp::update() noexcept { game_.update(10.f); }
 
 void SDLApp::draw() noexcept {
   SDL_RenderClear(renderer_);
   SDL_SetRenderDrawColor(renderer_, 100, 229, 255, 200);
-  screens_.draw(renderer_);
+  game_.draw(renderer_);
   SDL_RenderPresent(renderer_);
 }

@@ -1,13 +1,15 @@
 #include "gameover.h"
-#include "../screens.h"
+#include "../arkogame.h"
 #include <iostream>
 
-void GameOver::process_event(SDL_Event const &event, Screens &screen) noexcept {
+GameOver::GameOver(entt::registry* world) noexcept : world_{world} {}
+
+void GameOver::process_event(SDL_Event const &event, ArkoGame &screen) noexcept {
 
   if (event.type == SDL_EVENT_KEY_DOWN) {
     switch (event.key.keysym.scancode) {
     case SDL_SCANCODE_T:
-      screen.change_screen(Title{});
+      screen.change_screen(Title{world_});
       break;
     default:
       break;

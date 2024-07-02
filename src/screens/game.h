@@ -1,15 +1,19 @@
 #ifndef APP_SCREENS_GAME_H_
 #define APP_SCREENS_GAME_H_
 #include <SDL3/SDL.h>
+#include <entt/entt.hpp>
 
-class Screens;
+class ArkoGame;
+
 class Game final {
 public:
-  void process_event(SDL_Event const &event, Screens &screen) noexcept;
+  explicit Game(entt::registry* world) noexcept;
+  void process_event(SDL_Event const &event, ArkoGame &screen) noexcept;
   void update(float dt) noexcept;
   void draw(SDL_Renderer *renderer) const noexcept;
 
 private:
-private:
+  entt::registry* world_{};
 };
+
 #endif

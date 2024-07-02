@@ -2,8 +2,9 @@
 #define APP_SDLAPP_H_
 
 #include "config.h"
-#include "screens.h"
+#include "arkogame.h"
 #include <SDL3/SDL.h>
+#include <entt/entity/fwd.hpp>
 #include <spdlog/fmt/fmt.h>
 #include <toml++/toml.h>
 
@@ -93,7 +94,8 @@ private:
   bool is_running_{true};
   SDL_Window *window_{nullptr};
   SDL_Renderer *renderer_{nullptr};
-  Screens screens_{};
+
+  ArkoGame game_{};
 };
 
 /**

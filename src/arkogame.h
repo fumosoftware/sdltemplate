@@ -6,6 +6,7 @@
 #include "screens/settings.h"
 #include "screens/title.h"
 #include <SDL3/SDL.h>
+#include <entt/entt.hpp>
 #include <variant>
 
 /**
@@ -22,10 +23,11 @@
  * completely different states of an application, but a "Menu Screen"
  * can be a sub-state of the main gameplay screen.
  */
-class Screens final {
+class ArkoGame final {
   using Screen = std::variant<Title, Game, Settings, GameOver>;
 
 public:
+  explicit ArkoGame() noexcept;
   /**< Changes from the current screen to another screen */
   /**
    * Replaces the current screen with an instance of another screen.
@@ -47,7 +49,8 @@ public:
   void draw(SDL_Renderer *renderer) const noexcept;
 
 private:
-  Screen current_screen_{};
+  entt::registry world_{};
+  Screen current_screen_;
 };
 
 #endif
