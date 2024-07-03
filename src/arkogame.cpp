@@ -37,7 +37,11 @@ void ArkoGame::update([[maybe_unused]] float dt) noexcept {
           accumulator -= fixed_dt;
         }
 
-        interpolate(accumulator.count());
+      //Interpolate is causing issue with collision, need to fix.
+      // Because interpolation calculates previous position without regard for collisions,
+      // resulting in incorrect positions.
+
+        //interpolate(accumulator.count());
 
         // interpolat to accomidate for leftover time in the accumulator
         // auto const alpha = accumulator / fixed_dt;

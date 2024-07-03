@@ -6,6 +6,11 @@
 class ArkoGame;
 
 class Game final {
+  struct Arena {
+    float height{500.};
+    float width{500.};
+  };
+
 public:
   explicit Game(entt::registry* world) noexcept;
   void process_event(SDL_Event const &event, ArkoGame &screen) noexcept;
@@ -13,6 +18,7 @@ public:
   void draw(SDL_Renderer *renderer) const noexcept;
 
 private:
+  Arena arena_{};
   entt::registry* world_{};
 };
 

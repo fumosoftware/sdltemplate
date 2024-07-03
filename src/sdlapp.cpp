@@ -1,6 +1,8 @@
 #include "sdlapp.h"
 #include <SDL3/SDL_events.h>
+#include <SDL3/SDL_oldnames.h>
 #include <SDL3/SDL_render.h>
+#include <SDL3/SDL_video.h>
 #include <chrono>
 #include <cstdint>
 #include <spdlog/spdlog.h>
@@ -18,7 +20,7 @@ SDLApp::SDLApp() {
   }
 
   auto const width = config_["window"]["width"].value_or(1000);
-  auto const height = config_["window"]["width"].value_or(680);
+  auto const height = config_["window"]["height"].value_or(680);
   if (SDL_CreateWindowAndRenderer("Title", width, height, 0, &window_,
                                   &renderer_) != 0) {
     throw SDLException("Can not continue execution of application.",
