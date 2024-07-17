@@ -1,7 +1,5 @@
 #include "arkogame.h"
 #include <chrono>
-#include "components/position.h"
-#include "components/velocity.h"
 
 using Duration = std::chrono::duration<float>;
 using namespace std::literals;
@@ -54,16 +52,4 @@ void ArkoGame::update([[maybe_unused]] float dt) noexcept {
 void ArkoGame::draw(SDL_Renderer *renderer) const noexcept {
   std::visit([renderer](auto &&screen) { screen.draw(renderer); },
              current_screen_);
-}
-
-void ArkoGame::interpolate(float remainder) noexcept {
-  static auto const fixed_dt{1s/ 100.f};
-  auto const alpha = remainder / fixed_dt.count();
-
-  auto view = world_.view<Position, Velocity>();
-
-  for(auto&& [_, pos, vel] : view.each()) {
-    auto old_x = pos.x - (vel.x * fixed_dt.count());
-    pos.x = std::lerp(pos.x, old_x, alpha);
-  }
 }
