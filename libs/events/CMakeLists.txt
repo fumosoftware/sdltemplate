@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(arkogame_events)
+project(sdltemplate_events)
 
-add_library(arkogame_events)
-target_include_directories(arkogame_events PUBLIC include)
+add_library(sdltemplate_events src/events/event.cpp)
+target_include_directories(sdltemplate_events PUBLIC include)
