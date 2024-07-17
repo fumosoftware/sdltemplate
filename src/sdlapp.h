@@ -1,3 +1,4 @@
+#if FALSE
 #ifndef APP_SDLAPP_H_
 #define APP_SDLAPP_H_
 
@@ -128,4 +129,5 @@ private:
   std::string message_{};
 };
 
+#endif
 #endif
