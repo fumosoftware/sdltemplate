@@ -1,13 +1,10 @@
-#if FALSE
 #ifndef APP_SDLAPP_H_
 #define APP_SDLAPP_H_
 
-#include "config.h"
-#include "arkogame.h"
 #include <SDL3/SDL.h>
-#include <entt/entity/fwd.hpp>
-#include <spdlog/fmt/fmt.h>
-#include <toml++/toml.h>
+#include <fmt/printf.h>
+
+#include <arkogame/arkogame.hpp>
 
 /**
  * \class SDLApp SDLApp.h "SDLApp.h"
@@ -91,12 +88,11 @@ private:
   /**< Draws the current state of the application. */
   void draw() noexcept;
 
-  toml::table config_{load_or_create_config()};
   bool is_running_{true};
   SDL_Window *window_{nullptr};
   SDL_Renderer *renderer_{nullptr};
 
-  ArkoGame game_{};
+  sdltemplate::arkogame::ArkoGame game_{};
 };
 
 /**
@@ -119,8 +115,9 @@ public:
   explicit SDLException(std::string_view message,
                         std::string_view reason) noexcept
       : std::runtime_error(message.data()),
-        message_{fmt::format("EXCEPTION: {}\nREASON: {}", message.data(),
-                             reason.data())} {}
+    message_{reason} {}
+        //message_{fmt::format("EXCEPTION: {}\nREASON: {}", message.data(),
+                             //reason.data())} {}
 
   /**< Gets the descriptive error message */
   char const *what() const noexcept override { return message_.c_str(); }
@@ -129,5 +126,4 @@ private:
   std::string message_{};
 };
 
-#endif
 #endif

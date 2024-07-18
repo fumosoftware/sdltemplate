@@ -31,12 +31,17 @@ class ArkoGame {
   public:
     inline void process_event(sdltemplate::Event &&event,
                               ArkoGame *game) noexcept {
-      using T = std::decay_t<decltype(event)>;
-      if constexpr (std::is_same_v<T, sdltemplate::events::KeyPressEvent>) {
-        game->current_screen_ = GameScreen{};
-      }
+      std::visit(
+          [&](auto &&event) {
+            using T = std::decay_t<decltype(event)>;
+            if constexpr (std::is_same_v<T,
+                                         sdltemplate::events::KeyPressEvent>) {
+              game->current_screen_ = GameScreen{};
+            }
+          },
+          event);
     };
-    inline void update() noexcept { std::cout << "Settings Screen\n"; };
+    inline void update() noexcept {std::cout << "Settings Screen\n";};
     inline void draw() const noexcept {};
   };
 
@@ -44,10 +49,15 @@ class ArkoGame {
   public:
     inline void process_event(sdltemplate::Event &&event,
                               ArkoGame *game) noexcept {
-      using T = std::decay_t<decltype(event)>;
-      if constexpr (std::is_same_v<T, sdltemplate::events::KeyPressEvent>) {
-        game->current_screen_ = GameOverScreen{};
-      }
+      std::visit(
+          [&](auto &&event) {
+            using T = std::decay_t<decltype(event)>;
+            if constexpr (std::is_same_v<T,
+                                         sdltemplate::events::KeyPressEvent>) {
+              game->current_screen_ = GameOverScreen{};
+            }
+          },
+          event);
     };
     inline void update() noexcept { std::cout << "Game Screen\n"; };
     inline void draw() const noexcept {};
@@ -57,10 +67,15 @@ class ArkoGame {
   public:
     inline void process_event(sdltemplate::Event &&event,
                               ArkoGame *game) noexcept {
-      using T = std::decay_t<decltype(event)>;
-      if constexpr (std::is_same_v<T, sdltemplate::events::KeyPressEvent>) {
-        game->current_screen_ = TitleScreen{};
-      }
+      std::visit(
+          [&](auto &&event) {
+            using T = std::decay_t<decltype(event)>;
+            if constexpr (std::is_same_v<T,
+                                         sdltemplate::events::KeyPressEvent>) {
+              game->current_screen_ = TitleScreen{};
+            }
+          },
+          event);
     };
     inline void update() noexcept { std::cout << "Game Over Screen\n"; };
     inline void draw() const noexcept {};
