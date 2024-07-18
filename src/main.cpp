@@ -64,7 +64,7 @@ sdltemplate::events::Key translate_scancode(SDL_Scancode scancode) {
   }
 }
 
-sdltemplate::events::Event translate_sdl_event(SDL_Event const &event) {
+sdltemplate::Event translate_sdl_event(SDL_Event const &event) {
   switch (event.type) {
   case SDL_EVENT_KEY_DOWN:
     return sdltemplate::events::KeyPressEvent{

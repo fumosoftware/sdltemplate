@@ -17,8 +17,10 @@ struct KeyReleaseEvent {
 
 struct QuitEvent {};
 
-using Event = std::variant<std::monostate, KeyPressEvent, KeyReleaseEvent, QuitEvent>;
-
 } // namespace sdltemplate::events
+
+namespace sdltemplate {
+  using Event = std::variant<std::monostate, events::KeyPressEvent, events::KeyReleaseEvent, events::QuitEvent>;
+}
 
 #endif
