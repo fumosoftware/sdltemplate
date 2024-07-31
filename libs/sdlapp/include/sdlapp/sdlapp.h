@@ -5,72 +5,27 @@
 #include <stdexcept>
 #include <variant>
 
-#include <iostream>
-
 namespace sdltemplate {
 class SDLApp {
-
   class TitleState {
   public:
-    void process_event(SDL_Event const &event, SDLApp &app) noexcept {
-      switch (event.type) {
-      case SDL_EVENT_KEY_DOWN: {
-        if (event.key.keysym.scancode == SDL_SCANCODE_G)
-          app.m_current_state = GameState{};
-        else if (event.key.keysym.scancode == SDL_SCANCODE_Q)
-          app.m_is_running = false;
-      }
-      default:
-        break;
-      }
-    };
-    void update() noexcept {
-      std::cout << "Title State\n";
-    };
-
-  private:
+    void process_event(SDL_Event const &event, SDLApp &app) noexcept;
+    void update() noexcept;
+    void draw(SDL_Renderer *renderer) noexcept;
   };
+
   class GameState {
   public:
-    void process_event(SDL_Event const &event, SDLApp &app) noexcept {
-      switch (event.type) {
-      case SDL_EVENT_KEY_DOWN: {
-        if (event.key.keysym.scancode == SDL_SCANCODE_O)
-          app.m_current_state = GameOverState{};
-        else if (event.key.keysym.scancode == SDL_SCANCODE_T)
-              app.m_current_state = TitleState{};
-        else if (event.key.keysym.scancode == SDL_SCANCODE_Q)
-          app.m_is_running = false;
-      }
-      default:
-        break;
-      }
-    };
-    void update() noexcept {
-      std::cout << "Game State \n";
-    };
-
-  private:
+    void process_event(SDL_Event const &event, SDLApp &app) noexcept;
+    void update() noexcept;
+    void draw(SDL_Renderer *renderer) noexcept;
   };
+
   class GameOverState {
   public:
-    void process_event(SDL_Event const &event, SDLApp &app) noexcept {
-      switch (event.type) {
-      case SDL_EVENT_KEY_DOWN: {
-        if (event.key.keysym.scancode == SDL_SCANCODE_T)
-          app.m_current_state = TitleState{};
-        else if (event.key.keysym.scancode == SDL_SCANCODE_Q)
-          app.m_is_running = false;
-      }
-      default:
-        break;
-      }
-    };
-    void update() noexcept {
-      std::cout << "Game Over State \n";
-    };
-
-  private:
+    void process_event(SDL_Event const &event, SDLApp &app) noexcept;
+    void update() noexcept;
+    void draw(SDL_Renderer *renderer) noexcept;
   };
 
   using State = std::variant<TitleState, GameState, GameOverState>;
