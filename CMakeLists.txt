@@ -10,8 +10,6 @@ endif()
 
 add_executable(sdltemplate src/main.cpp)
 target_link_libraries(sdltemplate PRIVATE SDL3::SDL3)
-target_link_libraries(sdltemplate PRIVATE sdltemplate_events)
-target_link_libraries(sdltemplate PRIVATE arkogame)
 
 
 #find_package(tomlplusplus)
