@@ -8,8 +8,10 @@ else()
   message(FATAL_ERROR "could not find package \"SDL3\"")
 endif()
 
-add_executable(sdltemplate src/main.cpp src/app/app.cpp)
-target_link_libraries(sdltemplate PRIVATE SDL3::SDL3)
+add_subdirectory(libs)
+
+add_executable(sdltemplate src/main.cpp)
+target_link_libraries(sdltemplate PRIVATE sdlapp)
 
 
 #find_package(tomlplusplus)

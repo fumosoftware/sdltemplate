@@ -2,8 +2,8 @@
 #define SDLTEMPLATE_APP_APP_H_
 
 #include <SDL3/SDL.h>
-#include <stdexcept>
 #include <memory>
+#include <stdexcept>
 
 namespace sdltemplate {
 class SDLApp {
@@ -25,8 +25,9 @@ private:
   void poll_events() noexcept;
   void draw() noexcept;
 
-  SDL_Renderer* m_renderer{nullptr};
-  SDL_Window* m_window{nullptr};
+  SDL_Renderer *m_renderer{nullptr};
+  SDL_Window *m_window{nullptr};
+  bool m_is_running{true};
 };
 
 class SDLInitializeError : public std::runtime_error {

@@ -1,4 +1,4 @@
-#include "app/app.h"
+#include <sdlapp/sdlapp.h>
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) try {
   return sdltemplate::SDLApp{}.run();
