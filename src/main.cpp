@@ -1,7 +1,7 @@
 #include <sdlapp/sdlapp.h>
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) try {
-  return sdltemplate::SDLApp{}.run();
+  sdltemplate::SDLApp{}.run();
 } catch (sdltemplate::SDLInitializeError const &error) {
   return 1;
 } catch (sdltemplate::SDLWindowCreationError const &error) {

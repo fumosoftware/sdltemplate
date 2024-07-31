@@ -1,8 +1,7 @@
-#include <sdlapp/sdlapp.h>
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL_video.h>
-#include <iostream>
+#include <sdlapp/sdlapp.h>
 
 sdltemplate::SDLApp::SDLApp() try {
   auto const did_init = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
@@ -29,24 +28,28 @@ sdltemplate::SDLApp::~SDLApp() noexcept {
   SDL_Quit();
 }
 
-int sdltemplate::SDLApp::run() noexcept {
-
-  SDL_Event event;
-
+void sdltemplate::SDLApp::run() noexcept {
   while (m_is_running) {
-    while (SDL_PollEvent(&event)) {
-      if (event.type == SDL_EVENT_KEY_DOWN) {
-        m_is_running = false;
-      }
-    }
-
-    SDL_RenderClear(m_renderer);
-    SDL_RenderPresent(m_renderer);
+    poll_events();
+    update_state();
+    draw();
   }
-
-  return 0;
 }
 
-void sdltemplate::SDLApp::poll_events() noexcept {}
+void sdltemplate::SDLApp::poll_events() noexcept {
+  SDL_Event event{};
+  while (SDL_PollEvent(&event)) {
+    std::visit(
+        [&event, this](auto &&state) { state.process_event(event, *this); },
+        m_current_state);
+  }
+}
 
-void sdltemplate::SDLApp::draw() noexcept {}
+void sdltemplate::SDLApp::update_state() noexcept {
+  std::visit([](auto &&state) { state.update(); }, m_current_state);
+}
+
+void sdltemplate::SDLApp::draw() noexcept {
+  SDL_RenderClear(m_renderer);
+  SDL_RenderPresent(m_renderer);
+}
