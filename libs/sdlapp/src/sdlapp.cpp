@@ -3,23 +3,25 @@
 #include <SDL3/SDL_video.h>
 #include <sdlapp/sdlapp.h>
 
-sdltemplate::SDLApp::SDLApp() try {
-  auto const did_init = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
-  if (did_init != 0)
-    throw sdltemplate::SDLInitializeError{};
+sdltemplate::SDLApp::SDLApp() {
+  try {
+    auto const did_init = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
+    if (did_init != 0)
+      throw sdltemplate::SDLInitializeError{};
 
-  m_window = SDL_CreateWindow("Title", 400, 200, 0);
-  if (!m_window)
-    throw sdltemplate::SDLWindowCreationError{};
+    m_window = SDL_CreateWindow("Title", 400, 200, 0);
+    if (!m_window)
+      throw sdltemplate::SDLWindowCreationError{};
 
-  m_renderer = SDL_CreateRenderer(m_window, nullptr);
-  if (!m_renderer) {
+    m_renderer = SDL_CreateRenderer(m_window, nullptr);
+    if (!m_renderer) {
+      throw sdltemplate::SDLRendererCreationError{};
+    }
+  } catch (...) {
+    SDL_DestroyRenderer(m_renderer);
     SDL_DestroyWindow(m_window);
-    throw sdltemplate::SDLRendererCreationError{};
+    SDL_Quit();
   }
-
-} catch (...) {
-  SDL_Quit();
 }
 
 sdltemplate::SDLApp::~SDLApp() noexcept {
