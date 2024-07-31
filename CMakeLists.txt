@@ -10,7 +10,7 @@ else()
   message(FATAL_ERROR "could not find package \"SDL3\"")
 endif()
 
-add_executable(sdltemplate src/main.cpp src/sdlapp.cpp)
+add_executable(sdltemplate src/main.cpp)
 target_link_libraries(sdltemplate PRIVATE SDL3::SDL3)
 target_link_libraries(sdltemplate PRIVATE sdltemplate_events)
 target_link_libraries(sdltemplate PRIVATE arkogame)
