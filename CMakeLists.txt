@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 project(sdltemplate)
 
-add_subdirectory(libs)
-
 find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS SDL3-shared)
 if(${SDL3_FOUND})
   message(STATUS "the package \"SDL3\" has been found")
