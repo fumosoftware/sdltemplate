@@ -5,6 +5,10 @@
 
 #include <iostream>
 
+/********************************
+ * Title State implementation
+ ********************************/
+
 void sdltemplate::SDLApp::TitleState::process_event(SDL_Event const &event,
                                                     SDLApp &app) noexcept {
   switch (event.type) {
@@ -26,6 +30,10 @@ void sdltemplate::SDLApp::TitleState::update() noexcept {
 void sdltemplate::SDLApp::TitleState::draw(SDL_Renderer *renderer) noexcept {
   SDL_SetRenderDrawColor(renderer, 255, 0, 0, 200);
 }
+
+/********************************
+ * Game State implementation
+ ********************************/
 
 void sdltemplate::SDLApp::GameState::process_event(SDL_Event const &event,
                                                    SDLApp &app) noexcept {
@@ -51,6 +59,10 @@ void sdltemplate::SDLApp::GameState::draw(SDL_Renderer *renderer) noexcept {
   SDL_SetRenderDrawColor(renderer, 0, 0, 255, 200);
 }
 
+/********************************
+ * Game Over State implementation
+ ********************************/
+
 void sdltemplate::SDLApp::GameOverState::process_event(SDL_Event const &event,
                                                        SDLApp &app) noexcept {
   switch (event.type) {
@@ -73,6 +85,9 @@ void sdltemplate::SDLApp::GameOverState::draw(SDL_Renderer *renderer) noexcept {
   SDL_SetRenderDrawColor(renderer, 255, 255, 0, 200);
 }
 
+/********************************
+ * SDLApp Implementation
+ ********************************/
 sdltemplate::SDLApp::SDLApp() {
   try {
     auto const did_init = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
