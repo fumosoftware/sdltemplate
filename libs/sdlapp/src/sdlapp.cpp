@@ -1,6 +1,7 @@
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL_video.h>
+#include <chrono>
 #include <sdlapp/sdlapp.h>
 
 #include <iostream>
@@ -24,7 +25,7 @@ void sdltemplate::SDLApp::TitleState::process_event(SDL_Event const &event,
 }
 
 void sdltemplate::SDLApp::TitleState::update() noexcept {
-  std::cout << "Title State\n";
+  //std::cout << "Title State\n";
 }
 
 void sdltemplate::SDLApp::TitleState::draw(SDL_Renderer *renderer) noexcept {
@@ -52,7 +53,7 @@ void sdltemplate::SDLApp::GameState::process_event(SDL_Event const &event,
 }
 
 void sdltemplate::SDLApp::GameState::update() noexcept {
-  std::cout << "Game State\n";
+  //std::cout << "Game State\n";
 }
 
 void sdltemplate::SDLApp::GameState::draw(SDL_Renderer *renderer) noexcept {
@@ -78,7 +79,7 @@ void sdltemplate::SDLApp::GameOverState::process_event(SDL_Event const &event,
 }
 
 void sdltemplate::SDLApp::GameOverState::update() noexcept {
-  std::cout << "Game Over State\n";
+  //std::cout << "Game Over State\n";
 }
 
 void sdltemplate::SDLApp::GameOverState::draw(SDL_Renderer *renderer) noexcept {
@@ -102,6 +103,8 @@ sdltemplate::SDLApp::SDLApp() {
     if (!m_renderer) {
       throw sdltemplate::SDLRendererCreationError{};
     }
+
+    SDL_SetRenderVSync(m_renderer, 1);
   } catch (...) {
     SDL_DestroyRenderer(m_renderer);
     SDL_DestroyWindow(m_window);
@@ -132,8 +135,23 @@ void sdltemplate::SDLApp::poll_events() noexcept {
   }
 }
 
+using namespace std::chrono_literals;
 void sdltemplate::SDLApp::update() noexcept {
-  std::visit([](auto &&state) { state.update(); }, m_current_state);
+  static int frame_count = 0;
+  frame_count++;
+  std::visit([this](auto &&state) { 
+    auto accumulated  = m_time_accumulator.accumulate();
+    while(accumulated >= math::Duration{0.10}) {
+      state.update();
+      accumulated = m_time_accumulator.consume(math::Duration{0.10});
+    }
+  }, m_current_state);
+
+  if(m_time_accumulator.get_total_time() >= 1s) {
+    std::cout << "Frames: " << frame_count << "\n";
+    frame_count = 0;
+    m_time_accumulator.reset();
+  }
 }
 
 void sdltemplate::SDLApp::draw() noexcept {

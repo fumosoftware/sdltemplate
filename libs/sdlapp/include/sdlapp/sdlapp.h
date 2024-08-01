@@ -4,6 +4,7 @@
 #include <SDL3/SDL.h>
 #include <stdexcept>
 #include <variant>
+#include <math/time.h>
 
 namespace sdltemplate {
 /** Container for running an SDL Application */
@@ -123,6 +124,7 @@ private:
   /** Draws the current state. */
   void draw() noexcept;
 
+  math::TimeAccumulator m_time_accumulator{};
   State m_current_state{TitleState{}};
   SDL_Renderer *m_renderer{nullptr};
   SDL_Window *m_window{nullptr};
