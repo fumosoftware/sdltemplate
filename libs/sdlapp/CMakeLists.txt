@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
-project(sdlapp)
+project(fumocore)
 
-add_library(sdlapp src/sdlapp.cpp)
-target_link_libraries(sdlapp PRIVATE SDL3::SDL3)
-target_link_libraries(sdlapp PUBLIC math)
-target_include_directories(sdlapp PUBLIC include)
+add_library(fumocore src/core/sdlapp/sdlapp.cpp src/core/time/time.cpp)
+target_link_libraries(fumocore PRIVATE SDL3::SDL3)
+target_include_directories(fumocore PUBLIC include)

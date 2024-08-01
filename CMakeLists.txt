@@ -11,7 +11,7 @@ endif()
 add_subdirectory(libs)
 
 add_executable(sdltemplate src/main.cpp)
-target_link_libraries(sdltemplate PRIVATE sdlapp)
+target_link_libraries(sdltemplate PRIVATE fumocore)
 
 
 #find_package(tomlplusplus)

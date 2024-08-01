@@ -1,6 +1,8 @@
-#include <math/time.h>
+#include <core/time/time.h>
 
-math::Duration math::TimeAccumulator::accumulate() noexcept {
+using namespace fumo::core::time;
+
+Duration TimeAccumulator::accumulate() noexcept {
   auto const now = std::chrono::high_resolution_clock::now();
   auto const diff = std::chrono::duration_cast<Duration>(now - m_last_tick);
   m_last_tick = now;
@@ -10,8 +12,8 @@ math::Duration math::TimeAccumulator::accumulate() noexcept {
   return m_accumulated_time;
 }
 
-math::Duration
-math::TimeAccumulator::consume(math::Duration const& ms) noexcept {
+Duration
+TimeAccumulator::consume(Duration const& ms) noexcept {
 
   m_accumulated_time -= ms;
   return m_accumulated_time;

@@ -1,11 +1,11 @@
-#include <sdlapp/sdlapp.h>
+#include <core/sdlapp/sdlapp.h>
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) try {
-  sdltemplate::SDLApp{}.run();
-} catch (sdltemplate::SDLInitializeError const &error) {
+  fumo::core::SDLApp{}.run();
+} catch (fumo::core::SDLInitializeError const &error) {
   return 1;
-} catch (sdltemplate::SDLWindowCreationError const &error) {
+} catch (fumo::core::SDLWindowCreationError const &error) {
   return 2;
-} catch (sdltemplate::SDLRendererCreationError const &error) {
+} catch (fumo::core::SDLRendererCreationError const &error) {
   return 3;
 }

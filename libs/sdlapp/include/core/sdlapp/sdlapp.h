@@ -1,12 +1,12 @@
-#ifndef SDLTEMPLATE_APP_APP_H_
-#define SDLTEMPLATE_APP_APP_H_
+#ifndef FUMOSOFT_LIB_CORE_SDLAPP_SDLAPP_H_
+#define FUMOSOFT_LIB_CORE_SDLAPP_SDLAPP_H_
 
 #include <SDL3/SDL.h>
+#include <core/time/time.h>
 #include <stdexcept>
 #include <variant>
-#include <math/time.h>
 
-namespace sdltemplate {
+namespace fumo::core {
 /** Container for running an SDL Application */
 class SDLApp {
   /** Represents logic for the Title Screen state of the application */
@@ -124,7 +124,7 @@ private:
   /** Draws the current state. */
   void draw() noexcept;
 
-  math::TimeAccumulator m_time_accumulator{};
+  fumo::core::time::TimeAccumulator m_time_accumulator{};
   State m_current_state{TitleState{}};
   SDL_Renderer *m_renderer{nullptr};
   SDL_Window *m_window{nullptr};
@@ -149,6 +149,6 @@ public:
   SDLRendererCreationError() : std::runtime_error(SDL_GetError()) {}
 };
 
-} // namespace sdltemplate
+} // namespace fumo::core
 
 #endif

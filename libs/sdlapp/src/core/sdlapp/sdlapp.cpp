@@ -2,7 +2,7 @@
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL_video.h>
 #include <chrono>
-#include <sdlapp/sdlapp.h>
+#include <core/sdlapp/sdlapp.h>
 
 #include <iostream>
 
@@ -10,7 +10,7 @@
  * Title State implementation
  ********************************/
 
-void sdltemplate::SDLApp::TitleState::process_event(SDL_Event const &event,
+void fumo::core::SDLApp::TitleState::process_event(SDL_Event const &event,
                                                     SDLApp &app) noexcept {
   switch (event.type) {
   case SDL_EVENT_KEY_DOWN: {
@@ -24,11 +24,11 @@ void sdltemplate::SDLApp::TitleState::process_event(SDL_Event const &event,
   }
 }
 
-void sdltemplate::SDLApp::TitleState::update() noexcept {
+void fumo::core::SDLApp::TitleState::update() noexcept {
   //std::cout << "Title State\n";
 }
 
-void sdltemplate::SDLApp::TitleState::draw(SDL_Renderer *renderer) noexcept {
+void fumo::core::SDLApp::TitleState::draw(SDL_Renderer *renderer) noexcept {
   SDL_SetRenderDrawColor(renderer, 255, 0, 0, 200);
 }
 
@@ -36,7 +36,7 @@ void sdltemplate::SDLApp::TitleState::draw(SDL_Renderer *renderer) noexcept {
  * Game State implementation
  ********************************/
 
-void sdltemplate::SDLApp::GameState::process_event(SDL_Event const &event,
+void fumo::core::SDLApp::GameState::process_event(SDL_Event const &event,
                                                    SDLApp &app) noexcept {
   switch (event.type) {
   case SDL_EVENT_KEY_DOWN: {
@@ -52,11 +52,11 @@ void sdltemplate::SDLApp::GameState::process_event(SDL_Event const &event,
   }
 }
 
-void sdltemplate::SDLApp::GameState::update() noexcept {
+void fumo::core::SDLApp::GameState::update() noexcept {
   //std::cout << "Game State\n";
 }
 
-void sdltemplate::SDLApp::GameState::draw(SDL_Renderer *renderer) noexcept {
+void fumo::core::SDLApp::GameState::draw(SDL_Renderer *renderer) noexcept {
   SDL_SetRenderDrawColor(renderer, 0, 0, 255, 200);
 }
 
@@ -64,7 +64,7 @@ void sdltemplate::SDLApp::GameState::draw(SDL_Renderer *renderer) noexcept {
  * Game Over State implementation
  ********************************/
 
-void sdltemplate::SDLApp::GameOverState::process_event(SDL_Event const &event,
+void fumo::core::SDLApp::GameOverState::process_event(SDL_Event const &event,
                                                        SDLApp &app) noexcept {
   switch (event.type) {
   case SDL_EVENT_KEY_DOWN: {
@@ -78,30 +78,30 @@ void sdltemplate::SDLApp::GameOverState::process_event(SDL_Event const &event,
   }
 }
 
-void sdltemplate::SDLApp::GameOverState::update() noexcept {
+void fumo::core::SDLApp::GameOverState::update() noexcept {
   //std::cout << "Game Over State\n";
 }
 
-void sdltemplate::SDLApp::GameOverState::draw(SDL_Renderer *renderer) noexcept {
+void fumo::core::SDLApp::GameOverState::draw(SDL_Renderer *renderer) noexcept {
   SDL_SetRenderDrawColor(renderer, 255, 255, 0, 200);
 }
 
 /********************************
  * SDLApp Implementation
  ********************************/
-sdltemplate::SDLApp::SDLApp() {
+fumo::core::SDLApp::SDLApp() {
   try {
     auto const did_init = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
     if (did_init != 0)
-      throw sdltemplate::SDLInitializeError{};
+      throw fumo::core::SDLInitializeError{};
 
     m_window = SDL_CreateWindow("Title", 400, 200, 0);
     if (!m_window)
-      throw sdltemplate::SDLWindowCreationError{};
+      throw fumo::core::SDLWindowCreationError{};
 
     m_renderer = SDL_CreateRenderer(m_window, nullptr);
     if (!m_renderer) {
-      throw sdltemplate::SDLRendererCreationError{};
+      throw fumo::core::SDLRendererCreationError{};
     }
 
     SDL_SetRenderVSync(m_renderer, 1);
@@ -112,13 +112,13 @@ sdltemplate::SDLApp::SDLApp() {
   }
 }
 
-sdltemplate::SDLApp::~SDLApp() noexcept {
+fumo::core::SDLApp::~SDLApp() noexcept {
   SDL_DestroyRenderer(m_renderer);
   SDL_DestroyWindow(m_window);
   SDL_Quit();
 }
 
-void sdltemplate::SDLApp::run() noexcept {
+void fumo::core::SDLApp::run() noexcept {
   while (m_is_running) {
     poll_events();
     update();
@@ -126,7 +126,7 @@ void sdltemplate::SDLApp::run() noexcept {
   }
 }
 
-void sdltemplate::SDLApp::poll_events() noexcept {
+void fumo::core::SDLApp::poll_events() noexcept {
   SDL_Event event{};
   while (SDL_PollEvent(&event)) {
     std::visit(
@@ -136,14 +136,14 @@ void sdltemplate::SDLApp::poll_events() noexcept {
 }
 
 using namespace std::chrono_literals;
-void sdltemplate::SDLApp::update() noexcept {
+void fumo::core::SDLApp::update() noexcept {
   static int frame_count = 0;
   frame_count++;
   std::visit([this](auto &&state) { 
     auto accumulated  = m_time_accumulator.accumulate();
-    while(accumulated >= math::Duration{0.10}) {
+    while(accumulated >= fumo::core::time::Duration{0.10}) {
       state.update();
-      accumulated = m_time_accumulator.consume(math::Duration{0.10});
+      accumulated = m_time_accumulator.consume(fumo::core::time::Duration{0.10});
     }
   }, m_current_state);
 
@@ -154,7 +154,7 @@ void sdltemplate::SDLApp::update() noexcept {
   }
 }
 
-void sdltemplate::SDLApp::draw() noexcept {
+void fumo::core::SDLApp::draw() noexcept {
   SDL_RenderClear(m_renderer);
   std::visit([this](auto &&state) { state.draw(m_renderer); }, m_current_state);
   SDL_RenderPresent(m_renderer);
