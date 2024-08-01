@@ -118,7 +118,7 @@ sdltemplate::SDLApp::~SDLApp() noexcept {
 void sdltemplate::SDLApp::run() noexcept {
   while (m_is_running) {
     poll_events();
-    update_state();
+    update();
     draw();
   }
 }
@@ -132,7 +132,7 @@ void sdltemplate::SDLApp::poll_events() noexcept {
   }
 }
 
-void sdltemplate::SDLApp::update_state() noexcept {
+void sdltemplate::SDLApp::update() noexcept {
   std::visit([](auto &&state) { state.update(); }, m_current_state);
 }
 

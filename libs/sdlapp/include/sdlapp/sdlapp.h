@@ -119,7 +119,7 @@ private:
   /** Polls all queued SDL_Events. */
   void poll_events() noexcept;
   /** Runs the current states update logic. */
-  void update_state() noexcept;
+  void update() noexcept;
   /** Draws the current state. */
   void draw() noexcept;
 
