@@ -11,7 +11,8 @@ endif()
 add_subdirectory(libs)
 
 add_executable(sdltemplate src/main.cpp)
-target_link_libraries(sdltemplate PRIVATE fumocore)
+target_link_libraries(sdltemplate PUBLIC fumocore)
+target_link_libraries(sdltemplate PUBLIC fumomath)
 
 
 #find_package(tomlplusplus)

@@ -3,8 +3,10 @@
 
 #include <SDL3/SDL.h>
 #include <core/time/time.h>
+#include <entt/entity/fwd.hpp>
 #include <stdexcept>
 #include <variant>
+#include <entt/entt.hpp>
 
 namespace fumo::core {
 /** Container for running an SDL Application */
@@ -20,13 +22,13 @@ class SDLApp {
     void process_event(SDL_Event const &event, SDLApp &app) noexcept;
 
     /** Update logic for the Title State. */
-    void update() noexcept;
+    void update(time::Duration dt, entt::registry& registry) noexcept;
 
     /** Draws the Title State to the screen.
      *
      * \param *renderer A pointer to the SDLApp's renderer.
      */
-    void draw(SDL_Renderer *renderer) noexcept;
+    void draw(SDL_Renderer *renderer, entt::registry const& registry) noexcept;
   };
 
   /** Represents logic for the Game Screen state of the application */
@@ -40,13 +42,13 @@ class SDLApp {
     void process_event(SDL_Event const &event, SDLApp &app) noexcept;
 
     /** Update logic for the Game State. */
-    void update() noexcept;
+    void update(time::Duration dt, entt::registry& registry) noexcept;
 
     /** Draws the Game State to the screen.
      *
      * \param *renderer A pointer to the SDLApp's renderer.
      */
-    void draw(SDL_Renderer *renderer) noexcept;
+    void draw(SDL_Renderer *renderer, entt::registry const& registry) noexcept;
   };
 
   /** Represents logic for the Game Over Screen state of the application */
@@ -60,13 +62,13 @@ class SDLApp {
     void process_event(SDL_Event const &event, SDLApp &app) noexcept;
 
     /** Update logic for the Game Over State. */
-    void update() noexcept;
+    void update(time::Duration dt, entt::registry& registry) noexcept;
 
     /** Draws the Game Over State to the screen.
      *
      * \param *renderer A pointer to the SDLApp's renderer.
      */
-    void draw(SDL_Renderer *renderer) noexcept;
+    void draw(SDL_Renderer *renderer, entt::registry const& registry) noexcept;
   };
 
   /** Safe union type of all valid states of the SDLApp. */
@@ -124,6 +126,7 @@ private:
   /** Draws the current state. */
   void draw() noexcept;
 
+  entt::registry m_registry{};
   fumo::core::time::TimeAccumulator m_time_accumulator{};
   State m_current_state{TitleState{}};
   SDL_Renderer *m_renderer{nullptr};
